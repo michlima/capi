@@ -10,36 +10,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var t string
 // viewCmd represents the view command
 var viewCmd = &cobra.Command{
 	Use:   "view",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "View database table and tables",
+	Long: `View database table and tables. For example:
+view database: 	capi view <database>
+view table   :	capi view -t <table>
+`,
 	Run: viewTable,
 }
 
 func init() {
 	rootCmd.AddCommand(viewCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// viewCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// viewCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	viewCmd.Flags().StringVarP(&t,"table","t","","define table you want to view")
 }
 
 func viewTable(cmd *cobra.Command, args []string) {
-	if(len(args) >= 2){
-		_, err := store.GetAll(args[0]+".db",args[1])
+	if(len(t) > 1){
+		_, err := store.GetAll(args[0]+".db",t)
 		if(err != nil){
 			fmt.Printf("error getting table data: %s", err)
 		}

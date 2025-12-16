@@ -9,7 +9,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func Open(path string, table string) (*sql.DB, error) {
+func Open(path string, table string, keys string) (*sql.DB, error) {
 	db, err := sql.Open("sqlite3", path)
 	if err != nil {
 		return nil, err
@@ -20,14 +20,11 @@ func Open(path string, table string) (*sql.DB, error) {
 	if err != nil {
 		return nil, err
 	}
-	var cmd = data.CreateTable(table)
-	fmt.Printf("%s\n---",cmd)
-	_, err = db.Exec(cmd)
-	if err != nil {
-		fmt.Println("returning error")
+	err = data.CreateTable(db,table, keys)
+	if err != nil{
 		return nil, err
 	}
-	return db, nil
+	return nil,nil
 }
 
 func ViewTables(path string) ( *bool,error) {

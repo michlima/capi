@@ -13,13 +13,9 @@ import (
 // insertCmd represents the insert command
 var insertCmd = &cobra.Command{
 	Use:   "insert",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Insert data into table",
+	Long: `Data needs to be inserts by argument in <database> <table> <cols> <values> For example:
+	example: database myTable key,value id,someValue`,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := store.Set(args[0]+".db",args[1],args[2],args[3])
 		if err != nil{
@@ -30,6 +26,8 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(insertCmd)
+	
+	
 
 	// Here you will define your flags and configuration settings.
 

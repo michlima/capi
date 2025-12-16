@@ -11,17 +11,20 @@ import (
 )
 
 // ctCmd represents the ct command
+
+var table string
+var cols string
+
 var ctCmd = &cobra.Command{
 	Use:   "ct",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Create table in database (first argument is the name of the database)",
+	Long: `Create table in database (first argument is the name of the database). For example:
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	example: capi ct <databaseName> -t <tableName> -c <columnsOnTable>
+	applied: capi ct myApp -t users -c id,name,lastname,phonesNumber,streetAdr
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := store.Open(args[0]+".db", args[1])
+		_, err := store.Open(args[0]+".db", table, cols)
 		if err != nil{
 			fmt.Println("printing from main function")
 			fmt.Print(err)
@@ -31,14 +34,8 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(ctCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// ctCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// ctCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	
+	ctCmd.Flags().StringVarP(&table,"table","t","defaultTable","name table you want to create")
+	ctCmd.Flags().StringVarP(&cols,"cols","c","key,value","columns on table (first column is primary key)")
+	
 }
