@@ -144,7 +144,7 @@ capi/
 
 ## License
 
-Copyright © 2025 [Name Here] <[Email Address]>
+Copyright © 2025 Michael Lima
 
 ## Notes
 
