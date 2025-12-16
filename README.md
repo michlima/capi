@@ -17,13 +17,10 @@ A lightweight command-line utility for managing SQLite databases with a simple k
 ## Installation
 
 ```bash
-# Clone the repository
-git clone <repository-url>
+git clone https://github.com/michlima/capi.git
 cd capi
-
 # Build the application
 go build -o capi
-
 # Or install globally
 go install
 ```
@@ -132,19 +129,6 @@ capi/
 - **github.com/spf13/cobra**: CLI framework
 - **github.com/mattn/go-sqlite3**: SQLite3 driver
 
-## Development
-
-```bash
-# Run tests (if available)
-go test ./...
-
-# Build for specific platform
-GOOS=linux GOARCH=amd64 go build -o capi-linux
-
-# Clean build
-go clean && go build
-```
-
 ## Limitations
 
 - Currently only supports SQLite databases
@@ -157,27 +141,6 @@ go clean && go build
 ### Prerequisites
 
 - Go 1.16 or higher
-
-### From Source
-
-# Clone the repository
-
-```bash
-git clone https://github.com/michlima/capi.git
-cd capi
-```
-
-# Build the application
-
-```bash
-go build -o capi
-```
-
-# Or install globally
-
-```bash
-go install
-```
 
 ## License
 
