@@ -36,6 +36,7 @@ func CreateTable(db *sql.DB,table string, keys string) (error) {
 }
 
 func Insert(db *sql.DB,table string, keys string,values string ) (error) {	
+	fmt.Println("prining key values")
 	var parts = strings.Split(values, ",")
 	placeholders := make([]string, len(parts))
 	for i := range parts {
@@ -52,6 +53,38 @@ func Insert(db *sql.DB,table string, keys string,values string ) (error) {
 
 	_, err := db.Exec(query, vls...)
 	return err
+}
+
+func ViewFilter(db *sql.DB, table string, filter string) error {
+    parts := strings.Split(filter, ",")
+    q := fmt.Sprintf("SELECT * FROM %s WHERE ", table)
+    var vls []interface{}
+
+    for i, p := range parts {
+        kv := strings.SplitN(p, "=", 2)
+        if i > 0 {
+            q += " OR "
+        }
+        q += fmt.Sprintf("[%s]=?", kv[0])
+        vls = append(vls, strings.TrimSpace(kv[1]))
+    }
+
+    rows, err := db.Query(q, vls...)
+    if err != nil {
+        return err
+    }
+    defer rows.Close()
+
+    cols, err := rows.Columns()
+    if err != nil {
+        return err
+    }
+
+    PrintHearders(cols)
+	err = PrintRows(rows, cols)
+	if(err != nil){return err}
+
+    return nil
 }
 
 
