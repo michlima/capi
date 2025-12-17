@@ -16,30 +16,22 @@ var insertCmd = &cobra.Command{
 	Short: "Insert data into table. Arguments: <database> <table> <cols> <values>",
 	Long: `	Data needs to be inserts by argument in <database> <table> <cols> <values> For example:
 	example: database myTable key,value id,someValue`,
-	Run: func(cmd *cobra.Command, args []string) {
-		if(len(args) < 4){
-			fmt.Println("4 arguments are needed. Arguments: <database> <table> <cols> <values> ")
-		} else {
-			err := store.Set(args[0]+".db",args[1],args[2],args[3])
-			if err != nil{
-				fmt.Printf("\n\n ERROR:\n'%s'\n\n",err)
-			}
-		}
-	},
+	Run: insert,
 }
 
 func init() {
 	rootCmd.AddCommand(insertCmd)
-	
-	
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// insertCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// insertCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
+
+func insert (cmd *cobra.Command, args []string) {
+	if(len(args) < 4){
+		fmt.Println("4 arguments are needed. Arguments: <database> <table> <cols> <values> ")
+	} else {
+		err := store.Set(args[0]+".db",args[1],args[2],args[3])
+		if err != nil{
+			fmt.Printf("\n\n ERROR:\n'%s'\n\n",err)
+		}
+	}
+}
+
+
