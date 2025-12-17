@@ -49,7 +49,7 @@ capi ct myApp -t users -c id,name,email,phone
 
 **Flags:**
 
-- `-t, --table`: Table name (default: "defaultTable")
+- `-t, --table`: Specify table name (default: "defaultTable")
 - `-c, --cols`: Comma-separated column names (first is primary key, default: "key,value")
 
 #### 2. Insert Data (`insert`)
@@ -75,11 +75,47 @@ capi view <database>
 
 # View specific table contents
 capi view -t <tableName> <database>
+
+# View filtered rows from a table
+capi view -t <tableName> -f "column=value" <database>
 ```
 
 **Flags:**
 
 - `-t, --table`: Specify table to view (optional)
+- `-f, --filter`: Filter table to see specific rows (e.g., "id=1,name=John")
+
+#### 4. Delete Data (`delete`)
+
+Delete tables or rows from a database.
+
+```bash
+# Delete an entire table
+capi delete <database> -t <tableName>
+
+# Delete specific rows from a table (using filter)
+capi delete <database> -t <tableName> -f "column=value"
+
+# Example:
+capi delete myApp -t users
+# Deletes the 'users' table from 'myApp.db'
+
+capi delete myApp -t users -f "id=1"
+# Deletes rows where id is '1' from the 'users' table in 'myApp.db'
+```
+
+**Flags:**
+
+- `-t, --table`: Table to delete from (required)
+- `-f, --filter`: Filter to select rows for deletion (e.g., "id=1,name=John")
+
+#### 5. List Databases (`list-db`)
+
+List all available SQLite databases (`.db` files) in the current directory.
+
+```bash
+capi list-db
+```
 
 ### Examples
 
@@ -92,12 +128,31 @@ capi ct mydatabase -t products -c id,name,price,category
 # 2. Insert data
 capi insert mydatabase.db products id,name,price,category 101,Laptop,999.99,Electronics
 capi insert mydatabase.db products id,name,price,category 102,Chair,149.99,Furniture
+capi insert mydatabase.db products id,name,price,category 103,Mouse,25.00,Electronics
 
 # 3. View all tables
-capi view mydatabase.db
+capi view mydatabase
 
 # 4. View specific table
-capi view -t products mydatabase.db
+capi view mydatabase -t products
+
+# 5. View filtered rows
+capi view mydatabase -t products -f "category=Electronics"
+
+# 6. List all databases
+capi list-db
+
+# 7. Delete specific rows
+capi delete mydatabase -t products -f "id=103"
+
+# 8. View table after deletion
+capi view mydatabase -t products
+
+# 9. Delete an entire table
+capi delete mydatabase -t products
+
+# 10. View all tables after deletion
+capi view mydatabase
 ```
 
 ## Project Structure
@@ -108,11 +163,14 @@ capi/
 │   ├── root.go          # Root command
 │   ├── ct.go            # Create table command
 │   ├── insert.go        # Insert command
-│   └── view.go          # View command
+│   ├── view.go          # View command
+│   ├── delete.go        # Delete command (tables or rows)
+│   └── list-db.go       # List databases command
 ├── data/
-│   ├── data.go          # Database operations (CreateTable, Insert, ViewTable)
+│   ├── commands.go      # Database operations (CreateTable, Insert, ViewTable, Delete, DropTable)
+│   ├── utils.go         # Utility functions (OpenDatabase, PrintHeaders, PrintRows)
 │   └── store/
-│       └── store.go     # Database connection and higher-level operations
+│       └── sqlite.go    # Database connection and higher-level operations (Open, ViewTables, Set, GetAll, Get, Delete, DeleteTable)
 └── main.go              # Application entry point
 ```
 
