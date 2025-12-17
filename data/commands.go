@@ -89,6 +89,85 @@ func ViewFilter(db *sql.DB, table string, filter string) error {
 
 
 func ViewTable(tableName string) string{
+
+
 	var cmd = fmt.Sprintf("SELECT * FROM %s", tableName)
+
+
 	return cmd
+
+
 }
+
+
+
+
+
+func Delete(db *sql.DB, table string, filter string) error {
+
+
+	parts := strings.Split(filter, ",")
+
+
+	q := fmt.Sprintf("DELETE FROM %s WHERE ", table)
+
+
+	var vls []interface{}
+
+
+
+
+
+	for i, p := range parts {
+
+
+		kv := strings.SplitN(p, "=", 2)
+
+
+		if i > 0 {
+
+
+			q += " OR "
+
+
+		}
+
+
+		q += fmt.Sprintf("[%s]=?", kv[0])
+
+
+		vls = append(vls, strings.TrimSpace(kv[1]))
+
+
+	}
+
+
+
+
+
+	_, err := db.Exec(q, vls...)
+
+
+	return err
+
+
+}
+
+
+
+
+
+func DropTable(db *sql.DB, table string) error {
+
+
+	cmd := fmt.Sprintf("DROP TABLE IF EXISTS %s", table)
+
+
+	_, err := db.Exec(cmd)
+
+
+	return err
+
+
+}
+

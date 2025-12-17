@@ -89,3 +89,33 @@ func Get(path string, table string,filter string) (*string, error) {
 	err = data.ViewFilter(db,table,filter)
 	return nil, err
 }
+
+func Delete(path string, table string, filter string) error {
+	db, err := data.OpenDatabase(path)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	err = data.Delete(db, table, filter)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func DeleteTable(path string, table string) error {
+	db, err := data.OpenDatabase(path)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	err = data.DropTable(db, table)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
