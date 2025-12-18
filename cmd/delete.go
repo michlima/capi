@@ -4,7 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"capi/data/store"
+	"capi/core/store"
 	"fmt"
 
 	"github.com/spf13/cobra"

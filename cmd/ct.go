@@ -4,7 +4,7 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"capi/data/store"
+	"capi/core/store"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -14,6 +14,7 @@ import (
 
 var table string
 var cols string
+var db string
 
 var ctCmd = &cobra.Command{
 	Use:   "ct",
@@ -24,7 +25,7 @@ var ctCmd = &cobra.Command{
 	applied: capi ct myApp -t users -c id,name,lastname,phonesNumber,streetAdr
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := store.Open(args[0]+".db", table, cols)
+		_, err := store.Open(db +".db", table, cols)
 		if err != nil{
 			fmt.Println("printing from main function")
 			fmt.Print(err)
@@ -34,8 +35,11 @@ var ctCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(ctCmd)
-	
-	ctCmd.Flags().StringVarP(&table,"table","t","defaultTable","name table you want to create")
-	ctCmd.Flags().StringVarP(&cols,"cols","c","key,value","columns on table (first column is primary key)")
+	ctCmd.Flags().StringVarP(&db,"database","d","","columns on table (first column is primary key)")
+	ctCmd.Flags().StringVarP(&table,"table","t","","name table you want to create")
+	ctCmd.Flags().StringVarP(&cols,"cols","c","","columns on table (first column is primary key)")
+	ctCmd.MarkFlagRequired("table")
+	ctCmd.MarkFlagRequired("cols")
+	ctCmd.MarkFlagRequired("database")
 	
 }

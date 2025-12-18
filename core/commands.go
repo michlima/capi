@@ -36,7 +36,6 @@ func CreateTable(db *sql.DB,table string, keys string) (error) {
 }
 
 func Insert(db *sql.DB,table string, keys string,values string ) (error) {	
-	fmt.Println("prining key values")
 	var parts = strings.Split(values, ",")
 	placeholders := make([]string, len(parts))
 	for i := range parts {
@@ -89,14 +88,8 @@ func ViewFilter(db *sql.DB, table string, filter string) error {
 
 
 func ViewTable(tableName string) string{
-
-
 	var cmd = fmt.Sprintf("SELECT * FROM %s", tableName)
-
-
 	return cmd
-
-
 }
 
 

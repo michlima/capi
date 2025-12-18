@@ -4,7 +4,8 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"capi/data/store"
+	data "capi/core"
+	"capi/core/store"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -39,17 +40,22 @@ func viewTable(cmd *cobra.Command, args []string) {
 			fmt.Println("Table needs to be defined with flag '-t <table>'")
 			return
 		} else {
-			_, err := store.Get(args[0]+".db", t, f)
-			if(err != nil){
+			err := store.Get(args[0]+".db", t, f)
+			if err != nil {
 				fmt.Printf("\n Error: %s\n", err)
 			}
 		}
 	} else if(len(t) > 1){
-		_, err := store.GetAll(args[0]+".db",t)
+		err := store.GetAll(args[0]+".db",t)
 		if(err != nil){
 			fmt.Printf("error getting table data: %s", err)
 		}
 	}  else {
-		store.ViewTables(args[0]+".db")
+		tables,err := store.ViewTables(args[0]+".db")
+		if err != nil {
+			fmt.Printf("\n Error: %s\n", err)
+			return
+		}
+		data.PrintTables(tables)
 	}
 }

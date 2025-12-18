@@ -2,9 +2,8 @@ package store
 
 import (
 	"database/sql"
-	"fmt"
 
-	"capi/data"
+	data "capi/core"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -14,7 +13,6 @@ import (
 func Open(path string, table string, keys string) (*sql.DB, error) {
 	db, err := data.OpenDatabase(path)
 	if err != nil {return nil,err}
-	defer db.Close()
 	_, err = db.Exec(`PRAGMA journal_mode=WAL;`)
 	if err != nil {
 		return nil, err
@@ -25,12 +23,15 @@ func Open(path string, table string, keys string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	return nil,nil
+	return db,nil
 }
 
-func ViewTables(path string) ( *bool,error) {
+func ViewTables(path string) ([]string,error) {
 	db, err := data.OpenDatabase(path)
-	if err != nil {return nil,err}
+	tables := []string{}
+	if err != nil {
+		return nil ,err
+	}
 	defer db.Close()
 
 	rows, err := db.Query(`SELECT name FROM sqlite_master WHERE type='table';`)
@@ -39,16 +40,14 @@ func ViewTables(path string) ( *bool,error) {
 	}
 	defer rows.Close()
 
-	fmt.Println("Tables in database:")
-	
 	for rows.Next() {
 		var name string
 		if err := rows.Scan(&name); err != nil {
-			return nil, err
+			return nil,err
 		}
-		fmt.Println("-", name)
+		tables = append(tables, name)
 	}
-	return nil , nil
+	return tables, nil
 }
 
 func Set(path string, table string, keys string,values string) error {
@@ -63,31 +62,31 @@ func Set(path string, table string, keys string,values string) error {
 	return nil
 }
 
-func GetAll(path string,table string) ( string, error){
+func GetAll(path string,table string) error{
 	db, err := data.OpenDatabase(path)
-	if err != nil {return "",err}
+	if err != nil {return err}
 	defer db.Close()
 
 	rows, err := db.Query(data.ViewTable(table))
 	if err != nil{
-		return "", err
+		return err
 	}
 	defer rows.Close()
 	
 	cols, _ := rows.Columns()
 	data.PrintHearders(cols)
-	data.PrintRows(rows, cols)
+	err = data.PrintRows(rows, cols)
+	if(err != nil){return err}
 	
-	
-	return "", nil
+	return nil
 }
 
-func Get(path string, table string,filter string) (*string, error) {
+func Get(path string, table string,filter string) error {
 	db, err := data.OpenDatabase(path)
-	if err != nil {return nil,err}
+	if err != nil {return err}
 	defer db.Close()
 	err = data.ViewFilter(db,table,filter)
-	return nil, err
+	return err
 }
 
 func Delete(path string, table string, filter string) error {
