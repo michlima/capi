@@ -64,7 +64,7 @@ func TableInteraction (dbName string, table string) error{
 			if(err != nil) {return err}
 			fmt.Println("there")
 			data.PrintHearders(availableCols)
-			keys := data.GetInput("> Cols : ")
+			keys := data.GetInput("Cols : ")
 			
 			if(keys == "a"){
 				data.PrintHearders(availableCols)
@@ -96,7 +96,7 @@ func addRows (dbName string,table string,keys string) error{
 	db,err := data.OpenDatabase(dbName+".db")
 	if (err != nil) {return err}
 	for {
-		rows := data.GetInput(">")
+		rows := data.GetInput("")
 		if(rows == "exit" ||rows == "q"){ return nil}
 		err := data.Insert(db,table,keys,rows)
 		if(err !=nil) {fmt.Println(err)}

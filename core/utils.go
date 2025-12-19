@@ -29,7 +29,7 @@ func ListDatabases() ([]string, error) {
 
 func GetInput(placeholder string) (input string){
 	reader := bufio.NewReader(os.Stdin)
-
+	fmt.Print("capi > inserting:: ")
 	fmt.Print(placeholder)
 	input, err := reader.ReadString('\n')
 	if err != nil {
