@@ -45,11 +45,14 @@ func interactive(cmd *cobra.Command, args []string) {
 	}
 	
 	err = survey.AskOne(prompt, &choice)
-	interact.UseDB(choice)
 	if err != nil {
 		fmt.Println(err)
 		return 
 	}
-
+	err = interact.UseDB(choice)
+	if err != nil {
+		fmt.Println(err)
+		return 
+	}
 	
 }

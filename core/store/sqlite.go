@@ -81,6 +81,21 @@ func GetAll(path string,table string) error{
 	return nil
 }
 
+func GetCols(path string, table string) ([]string, error) {
+	db, err := data.OpenDatabase(path)
+	if err != nil {return nil,err}
+	defer db.Close()
+
+	rows, err := db.Query(data.ViewTable(table))
+	if err != nil{
+		return nil,err
+	}
+	defer rows.Close()
+	cols, _ := rows.Columns()
+	
+	return cols,nil
+}
+
 func Get(path string, table string,filter string) error {
 	db, err := data.OpenDatabase(path)
 	if err != nil {return err}

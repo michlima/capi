@@ -1,9 +1,11 @@
 package data
 
 import (
+	"bufio"
 	"database/sql"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strings"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -23,6 +25,18 @@ func ListDatabases() ([]string, error) {
 	}
 
 	return databases, nil
+}
+
+func GetInput(placeholder string) (input string){
+	reader := bufio.NewReader(os.Stdin)
+
+	fmt.Print(placeholder)
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	return strings.TrimSpace(input) 
 }
 
 func OpenDatabase(path string) (*sql.DB, error) {
@@ -62,6 +76,8 @@ func PrintHearders(cols []string) {
 	}
 	fmt.Println()
 }
+
+
 
 func PrintRows(rows *sql.Rows, cols []string) error {
 	for rows.Next() {
