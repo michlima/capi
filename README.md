@@ -1,5 +1,7 @@
 # CAPI - Command-Line Database Utility
 
+**Project Status:** This is an incomplete project and is still ongoing.
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Go Version](https://img.shields.io/badge/Go-1.21%2B-blue)](https://golang.org)
 [![SQLite](https://img.shields.io/badge/SQLite-3.x-lightgrey)](https://sqlite.org)
@@ -11,6 +13,7 @@ A lightweight command-line utility for managing SQLite databases with a simple k
 - **Create Tables**: Easily create tables with specified columns (first column is primary key)
 - **Insert Data**: Add records to database tables
 - **View Data**: Display table contents and list all tables in a database
+- **Interactive Mode**: Use the `use` command for an interactive experience to manage your tables.
 - **SQLite3 Support**: Uses SQLite3 with WAL (Write-Ahead Logging) mode enabled for better performance
 - **Simple CLI**: Intuitive command-line interface with helpful commands
 
@@ -111,49 +114,28 @@ capi delete myApp -t users -f "id=1"
 
 #### 5. List Databases (`list-db`)
 
-List all available SQLite databases (`.db` files) in the current directory.
+List all available SQLite databases (`.db` files) in the `storage` directory.
 
 ```bash
 capi list-db
 ```
 
-### Examples
+#### 6. Use Database (`use`)
 
-#### Complete Workflow Example
+Enter an interactive mode to manage a database.
 
 ```bash
-# 1. Create a database table
-capi ct mydatabase -t products -c id,name,price,category
-
-# 2. Insert data
-capi insert mydatabase.db products id,name,price,category 101,Laptop,999.99,Electronics
-capi insert mydatabase.db products id,name,price,category 102,Chair,149.99,Furniture
-capi insert mydatabase.db products id,name,price,category 103,Mouse,25.00,Electronics
-
-# 3. View all tables
-capi view mydatabase
-
-# 4. View specific table
-capi view mydatabase -t products
-
-# 5. View filtered rows
-capi view mydatabase -t products -f "category=Electronics"
-
-# 6. List all databases
-capi list-db
-
-# 7. Delete specific rows
-capi delete mydatabase -t products -f "id=103"
-
-# 8. View table after deletion
-capi view mydatabase -t products
-
-# 9. Delete an entire table
-capi delete mydatabase -t products
-
-# 10. View all tables after deletion
-capi view mydatabase
+capi use <database>
 ```
+
+This command will present a list of tables in the database. After selecting a table, you'll be presented with an interactive menu with the following options:
+- **View**: View the content of the selected table.
+- **Edit**: (Not yet implemented)
+- **Add**: Add a new row to the table.
+- **Delete**: Delete rows from the table.
+- **Back**: Go back to the table selection menu.
+
+**_still incomplete_**
 
 ## Project Structure
 
@@ -165,12 +147,15 @@ capi/
 │   ├── insert.go        # Insert command
 │   ├── view.go          # View command
 │   ├── delete.go        # Delete command (tables or rows)
-│   └── list-db.go       # List databases command
-├── data/
-│   ├── commands.go      # Database operations (CreateTable, Insert, ViewTable, Delete, DropTable)
-│   ├── utils.go         # Utility functions (OpenDatabase, PrintHeaders, PrintRows)
+│   ├── list-db.go       # List databases command
+│   └── use.go           # Interactive mode command
+├── core/
+│   ├── commands.go      # Database operations (CreateTable, Insert, 
+│   ├── utils.go         # Utility functions (OpenDatabase, PrintHeaders, 
 │   └── store/
-│       └── sqlite.go    # Database connection and higher-level operations (Open, ViewTables, Set, GetAll, Get, Delete, DeleteTable)
+│       └── sqlite.go    # Database connection and higher-level operations 
+├── interact/
+│   └── interactions.go  # Interactive mode logic
 └── main.go              # Application entry point
 ```
 
@@ -183,8 +168,9 @@ capi/
 
 ## Dependencies
 
-- **Go**: >= 1.16
+- **Go**: >= 1.21
 - **github.com/spf13/cobra**: CLI framework
+- **github.com/AlecAivazis/survey/v2**: Interactive prompts
 - **github.com/mattn/go-sqlite3**: SQLite3 driver
 
 ## Limitations
@@ -193,12 +179,11 @@ capi/
 - All data is stored as TEXT type
 - Simple comma-separated parsing (no handling of commas within values)
 - First column is always the primary key
-
-## 📦 Installation
+- The "Edit" functionality in interactive mode is not yet implemented.
 
 ### Prerequisites
 
-- Go 1.16 or higher
+- Go 1.21 or higher
 
 ## License
 
