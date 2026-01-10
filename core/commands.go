@@ -35,7 +35,7 @@ func CreateTable(db *sql.DB,table string, keys string) (error) {
     return nil
 }
 
-func Insert(db *sql.DB,table string, keys string,values string ) (error) {	
+func Insert(db *sql.DB,table string, cols string,values string ) (error) {	
 	var parts = strings.Split(values, ",")
 	placeholders := make([]string, len(parts))
 	for i := range parts {
@@ -43,7 +43,7 @@ func Insert(db *sql.DB,table string, keys string,values string ) (error) {
 	}
 	placeholderStr := strings.Join(placeholders, ",")	
 	
-	query := fmt.Sprintf("INSERT INTO %s(%s) VALUES (%s)", table, keys, placeholderStr)
+	query := fmt.Sprintf("INSERT INTO %s(%s) VALUES (%s)", table, cols, placeholderStr)
 	
 	var vls = make([]interface{},len(parts))
 	for i,v := range parts {
@@ -91,10 +91,6 @@ func ViewTable(tableName string) string{
 	var cmd = fmt.Sprintf("SELECT * FROM %s", tableName)
 	return cmd
 }
-
-
-
-
 
 func Delete(db *sql.DB, table string, filter string) error {
 
@@ -145,10 +141,6 @@ func Delete(db *sql.DB, table string, filter string) error {
 
 
 }
-
-
-
-
 
 func DropTable(db *sql.DB, table string) error {
 

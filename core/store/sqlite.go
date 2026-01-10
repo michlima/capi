@@ -50,12 +50,12 @@ func ViewTables(path string) ([]string,error) {
 	return tables, nil
 }
 
-func Set(path string, table string, keys string,values string) error {
+func Set(path string, table string, cols string,values string) error {
 	db, err := data.OpenDatabase(path)
 	if err != nil {return err}
 	defer db.Close()
 
-	err = data.Insert(db,table,keys,values)
+	err = data.Insert(db,table,cols,values)
 	if(err != nil){
 		return err
 	}
